@@ -45,6 +45,26 @@ class UserModel {
     });
   }
 
+  findUserByVerificationToken(token) {
+    return new Promise((resolve, reject) => {
+      const sql = `SELECT * FROM users WHERE verification_token = ?`;
+      this.db.get(sql, [token], (err, row) => {
+        if (err) reject(err);
+        else resolve(row);
+      });
+    });
+  }
+
+  updateEmailVerificationStatus(userId, status) {
+    return new Promise((resolve, reject) => {
+      const sql = `UPDATE users SET email_verified = ?, verification_token = NULL WHERE id = ?`;
+      this.db.run(sql, [status ? 1 : 0, userId], function(err) {
+        if (err) reject(err);
+        else resolve({ changes: this.changes });
+      });
+    });
+  }
+
   updateUser(id, updateData) {
     const keys = Object.keys(updateData);
     const values = Object.values(updateData);
