@@ -27,6 +27,11 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+// Welcome route
+app.get('/', (req, res) => {
+  res.send('<h1>Goldpay user management system is running</h1>');
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/kyc', kycRoutes);
