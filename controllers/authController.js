@@ -6,6 +6,20 @@ const crypto = require('crypto');
 const db = require('../config/db')();
 const userModel = new UserModel(db);
 
+exports.checkEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+    
+    const existingUser = await userModel.findUserByEmail(email);
+    return res.json({ exists: !!existingUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Error checking email', error: error.message });
+  }
+};
+
 exports.register = async (req, res) => {
   try {
     const { email, password } = req.body;
